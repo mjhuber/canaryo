@@ -1,10 +1,8 @@
-FROM golang:1.14 AS build
+FROM golang:latest
+EXPOSE 8000
 
-WORKDIR /go/src/github.com/mjhuber/canaryo
-ADD . /go/src/github.com/mjhuber/canaryo
-RUN GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o app
-
-FROM gcr.io/distroless/base
-EXPOSE 8080
-COPY --from=build /go/src/github.com/mjhuber/canaryo/app /app
-CMD ["./app"]
+RUN mkdir /app
+ADD . /app/
+WORKDIR /app
+RUN go build -o main .
+CMD ["/app/main"]
